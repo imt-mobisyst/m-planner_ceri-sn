@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CERI-SN IMT M-planner</title>
+        <meta name="escription" content="BDS aquatic mission planner for aerodynamically eleveted marine drone">
+        <link rel="stylesheet" href="./style/resources/notiflix.css">
+        <link rel="stylesheet" href="./style/style.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin=""/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
+        <link rel="canonical" href="https://iconduck.com/free-icons/geojson-file" />
+    </head>
+
+    <body>
+        <div class="container">
+          <header>CERI-SN IMT M-planner v0.0</header>
+          <nav>
+            <label for="step">Discretization step in meter:</label>
+            <input id="step" type="text" placeholder="5"/>
+            <button class="button button1">Conf. step</button>
+            <button class="button button2">Mesh</button>
+            <button class="button button3">Plan</button>
+            <button class="button button4">Replan</button>
+          </nav>
+          <main>
+            <div id="map">
+              <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+                integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="">
+              </script>
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+              <script src="./js/resources/notiflix.js"></script>
+              <script src="https://cdn.jsdelivr.net/gh/tomickigrzegorz/autocomplete@2.0.1/dist/js/autocomplete.min.js"></script>
+              <script src="./js/myJavascript.js">
+              </script> 
+            </div>
+          </main>
+        </div>
+    </body>
+    
+</html>
