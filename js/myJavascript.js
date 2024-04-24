@@ -1,25 +1,34 @@
-//--------initailizingMapobject------------
+//--------confirm the discretization steps--------
+function getDiscretizationstep() {
+  var step, placeHolder, selectedStep;
+  step = document.getElementById('step').value;
+  placeHolder = document.getElementById('step').placeholder;
+  selectedStep = step === '' ? Number(placeHolder) + 'm' : step + 'm';
+  document.getElementById('displaySelectedstep').innerHTML = selectedStep;
+}
+//--------initailizingMapobject--------
 let config = {
   minZoom: 1,
-  maxZoom: 18,
+  maxZoom: 40,
 };
-// magnification with which the map will start
+//--------magnification with which the map will start--------
 const zoom = 15;
-// CERI-SN IMT co-ordinates
+//--------CERI-SN IMT co-ordinates--------
 const lat = 50.36667;
 const lng = 3.06667;
 
-// calling map
+//--------calling map--------
 const map = L.map('map', config).setView([lat, lng], zoom);
 map.options.zoomDelta = 0.52;
 
 googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+  maxZoom: 40,
   subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
 }).addTo(map);
 
-// create custom button
+//--------create custom button--------
 const customControl = L.Control.extend({
-  // button position
+  //--------button position--------
   options: {
     position: 'topleft',
     className: 'locate-button leaflet-bar',
@@ -28,7 +37,7 @@ const customControl = L.Control.extend({
       'margin-top: 0; left: 0; display: flex; cursor: pointer; justify-content: center; font-size: 2rem;',
   },
 
-  // method
+  //--------method--------
   onAdd: function (map) {
     this._map = map;
     const button = L.DomUtil.create('div');
@@ -46,7 +55,7 @@ const customControl = L.Control.extend({
   _clicked: function (e) {
     L.DomEvent.stopPropagation(e);
 
-    // this.removeLocate();
+    //--------this.removeLocate();--------
 
     this._checkLocate();
 
@@ -59,43 +68,42 @@ const customControl = L.Control.extend({
   _locateMap: function () {
     const locateActive = document.querySelector('.locate-button');
     const locate = locateActive.classList.contains('locate-active');
-    // add/remove class from locate button
+    //--------add/remove class from locate button--------
     locateActive.classList[locate ? 'remove' : 'add']('locate-active');
 
-    // remove class from button
-    // and stop watching location
+    //--------remove class from button and stop watching location--------
     if (locate) {
       this.removeLocate();
       this._map.stopLocate();
       return;
     }
 
-    // location on found
+    //--------location on found--------
     this._map.on('locationfound', this.onLocationFound, this);
-    // locataion on error
+    //--------locataion on error--------
     this._map.on('locationerror', this.onLocationError, this);
 
-    // start locate
+    //--------start locate--------
     this._map.locate({ setView: true, enableHighAccuracy: true });
   },
   onLocationFound: function (e) {
-    // add circle
+    //--------add circle--------
     this.addCircle(e).addTo(this.featureGroup()).addTo(map);
 
-    // add marker
+    //--------add marker--------
     this.addMarker(e).addTo(this.featureGroup()).addTo(map);
 
-    // add legend
+    //--------add legend--------
   },
-  // on location error
+  //--------on location error--------
   onLocationError: function (e) {
     this.addLegend('Location access denied.');
   },
-  // feature group
+  //-------- feature group--------
   featureGroup: function () {
     return new L.FeatureGroup();
   },
-  // add legend
+  //-------- add legend--------
   addLegend: function (text) {
     const checkIfDescriotnExist = document.querySelector('.description');
 
@@ -150,11 +158,10 @@ const customControl = L.Control.extend({
   },
 });
 
-// adding new button to map controll
+//--------adding new button to map controll--------
 map.addControl(new customControl());
 
-// --------------------------------------------------
-// Nofiflix options
+//-------- nofiflix options--------
 
 Notiflix.Notify.init({
   width: '300px',
@@ -162,16 +169,15 @@ Notiflix.Notify.init({
   distance: '0px',
 });
 
-// --------------------------------------------------
-// add buttons to map
+//--------add buttons to map--------
 
 const customControl1 = L.Control.extend({
-  // button position
+  //--------button position--------
   options: {
     position: 'topright',
   },
 
-  // method
+  //--------method--------
   onAdd: function () {
     const array = [
       {
@@ -210,7 +216,7 @@ const customControl1 = L.Control.extend({
       button.innerHTML = item.html;
       button.className += item.className;
 
-      // add buttons to container;
+      //--------add buttons to container;--------
       container.appendChild(button);
     });
 
@@ -219,8 +225,7 @@ const customControl1 = L.Control.extend({
 });
 map.addControl(new customControl1());
 
-// Draw polygon, circle, rectangle, polyline
-// --------------------------------------------------
+//--------draw polygon, circle, rectangle, polyline--------
 
 let drawnItems = L.featureGroup().addTo(map);
 
@@ -258,13 +263,12 @@ map.on(L.Draw.Event.CREATED, function (event) {
   drawnItems.addLayer(layer);
 });
 
-// --------------------------------------------------
-// save geojson to file
+//--------save geojson to file--------
 
 const exportJSON = document.querySelector('.export');
 
 exportJSON.addEventListener('click', () => {
-  // Extract GeoJson from featureGroup
+  //--------extract GeoJson from featureGroup--------
   const data = drawnItems.toGeoJSON();
 
   if (data.features.length === 0) {
@@ -274,7 +278,7 @@ exportJSON.addEventListener('click', () => {
     Notiflix.Notify.info('You can save the data to a geojson');
   }
 
-  // Stringify the GeoJson
+  //--------stringify the GeoJson--------
   const convertedData =
     'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data));
 
@@ -282,8 +286,7 @@ exportJSON.addEventListener('click', () => {
   exportJSON.setAttribute('download', 'data.geojson');
 });
 
-// --------------------------------------------------
-// save geojson to localstorage
+//--------save geojson to localstorage--------
 const saveJSON = document.querySelector('.save');
 
 saveJSON.addEventListener('click', (e) => {
@@ -301,8 +304,7 @@ saveJSON.addEventListener('click', (e) => {
   localStorage.setItem('geojson', JSON.stringify(data));
 });
 
-// --------------------------------------------------
-// remove gojson from localstorage
+//--------remove gojson from localstorage--------
 
 const removeJSON = document.querySelector('.remove');
 
@@ -317,8 +319,7 @@ removeJSON.addEventListener('click', (e) => {
   });
 });
 
-// --------------------------------------------------
-// load geojson from localstorage
+//--------load geojson from localstorage--------
 
 const geojsonFromLocalStorage = JSON.parse(localStorage.getItem('geojson'));
 
@@ -361,8 +362,7 @@ if (geojsonFromLocalStorage) {
   setGeojsonToMap(geojsonFromLocalStorage);
 }
 
-// --------------------------------------------------
-// get geojson from file
+//--------get geojson from file--------
 
 function openFile(event) {
   const input = event.target;
@@ -381,27 +381,26 @@ function openFile(event) {
   input.value = '';
 }
 
-// --------------------------------------------------------------
-// create seearch button
+//--------create seearch button--------
 
-// add "random" button
-const buttonTemplate = `<div class="leaflet-search"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M31.008 27.231l-7.58-6.447c-0.784-0.705-1.622-1.029-2.299-0.998 1.789-2.096 2.87-4.815 2.87-7.787 0-6.627-5.373-12-12-12s-12 5.373-12 12 5.373 12 12 12c2.972 0 5.691-1.081 7.787-2.87-0.031 0.677 0.293 1.515 0.998 2.299l6.447 7.58c1.104 1.226 2.907 1.33 4.007 0.23s0.997-2.903-0.23-4.007zM12 20c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8z"></path></svg></div><div class="auto-search-wrapper max-height"><input type="text" id="marker" autocomplete="off"  aria-describedby="instruction" aria-label="Search ..." /><div id="instruction" class="hidden">When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.</div></div>`;
+//--------add "random" button--------
+const buttonTemplate = `<div class="leaflet-search"><svg version="1.1" xmlns="http://--------www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M31.008 27.231l-7.58-6.447c-0.784-0.705-1.622-1.029-2.299-0.998 1.789-2.096 2.87-4.815 2.87-7.787 0-6.627-5.373-12-12-12s-12 5.373-12 12 5.373 12 12 12c2.972 0 5.691-1.081 7.787-2.87-0.031 0.677 0.293 1.515 0.998 2.299l6.447 7.58c1.104 1.226 2.907 1.33 4.007 0.23s0.997-2.903-0.23-4.007zM12 20c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8z"></path></svg></div><div class="auto-search-wrapper max-height"><input type="text" id="marker" autocomplete="off"  aria-describedby="instruction" aria-label="Search ..." /><div id="instruction" class="hidden">When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.</div></div>`;
 
-// create custom button
+//--------create custom button--------
 const customControl2 = L.Control.extend({
-  // button position
+  //--------button position--------
   options: {
     position: 'topright',
     className: 'leaflet-autocomplete',
   },
 
-  // method
+  //--------method--------
   onAdd: function () {
     return this._initialLayout();
   },
 
   _initialLayout: function () {
-    // create button
+    //--------create button--------
     const container = L.DomUtil.create(
       'div',
       'leaflet-bar ' + this.options.className
@@ -415,36 +414,34 @@ const customControl2 = L.Control.extend({
   },
 });
 
-// adding new button to map controll
+//--------adding new button to map controll--------
 map.addControl(new customControl2());
 
-// --------------------------------------------------------------
-
-// input element
+//--------input element--------
 const root = document.getElementById('marker');
 
 function addClassToParent() {
   const searchBtn = document.querySelector('.leaflet-search');
   searchBtn.addEventListener('click', (e) => {
-    // toggle class
+    //--------toggle class--------
     e.target
       .closest('.leaflet-autocomplete')
       .classList.toggle('active-autocomplete');
 
-    // add placeholder
+    //--------add placeholder--------
     root.placeholder = 'Search ...';
 
-    // focus on input
+    //--------focus on input--------
     root.focus();
 
-    // use destroy method
+    //--------use destroy method--------
     autocomplete.destroy();
   });
 }
 
 addClassToParent();
 
-// function clear input
+//--------function clear input--------
 map.on('click', () => {
   document
     .querySelector('.leaflet-autocomplete')
@@ -453,17 +450,14 @@ map.on('click', () => {
   clickOnClearButton();
 });
 
-// autocomplete section
-// more config find in https://github.com/tomickigrzegorz/autocomplete
-// --------------------------------------------------------------
-
+//--------autocomplete section--------
 const autocomplete = new Autocomplete('marker', {
   delay: 1000,
   selectFirst: true,
   howManyCharacters: 2,
 
   onSearch: function ({ currentValue }) {
-    const api = `https://nominatim.openstreetmap.org/search?format=geojson&limit=5&q=${encodeURI(
+    const api = `https://--------nominatim.openstreetmap.org/search?format=geojson&limit=5&q=${encodeURI(
       currentValue
     )}`;
 
@@ -484,8 +478,7 @@ const autocomplete = new Autocomplete('marker', {
 
   onResults: ({ currentValue, matches, template }) => {
     const regex = new RegExp(currentValue, 'i');
-    // checking if we have results if we don't
-    // take data from the noResults method
+    //--------checking if we have results if we don't take data from the noResults method--------
     return matches === 0
       ? template
       : matches
@@ -504,10 +497,9 @@ const autocomplete = new Autocomplete('marker', {
   onSubmit: ({ object }) => {
     const { display_name } = object.properties;
     const cord = object.geometry.coordinates;
-    // custom id for marker
-    // const customId = Math.random();
-
-    // remove last marker
+    //--------custom id for marker--------
+    //--------const customId = Math.random();--------
+    //--------remove last marker--------
     map.eachLayer(function (layer) {
       if (layer.options && layer.options.pane === 'markerPane') {
         if (layer._icon.classList.contains('leaflet-marker-locate')) {
@@ -516,22 +508,22 @@ const autocomplete = new Autocomplete('marker', {
       }
     });
 
-    // add marker
+    //--------add marker--------
     const marker = L.marker([cord[1], cord[0]], {
       title: display_name,
     });
 
-    // add marker to map
+    //--------add marker to map--------
     marker.addTo(map).bindPopup(display_name);
 
-    // set marker to coordinates
+    //--------set marker to coordinates--------
     map.setView([cord[1], cord[0]], 8);
 
-    // add class to marker
+    //--------add class to marker--------
     L.DomUtil.addClass(marker._icon, 'leaflet-marker-locate');
   },
 
-  // the method presents no results
+  //--------the method presents no results--------
   noResults: ({ currentValue, template }) =>
     template(`<li>No results found: "${currentValue}"</li>`),
 });
