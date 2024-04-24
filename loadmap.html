@@ -19,13 +19,15 @@
         <div class="container">
           <header>CERI-SN IMT M-planner v0.0</header>
           <nav>
-            <label for="step">Discretization step in meter:</label>
+            <label for="step">Discretization step:</label>
             <input id="step" type="text" placeholder="5"/>
-            <button class="button button1">Conf. step</button>
+            <button class="button button1" onclick="getDiscretizationstep()">Conf. step</button>
+            <span id="displaySelectedstep"></span>
             <button class="button button2">Mesh</button>
             <button class="button button3">Plan</button>
             <button class="button button4">Replan</button>
           </nav>
+          
           <main>
             <div id="map">
               <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
