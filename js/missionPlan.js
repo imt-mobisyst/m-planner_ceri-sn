@@ -296,5 +296,5 @@ function layerGroupClickHandler(event) {
 }
 
 
-initialize(50.38,3.08)
-getMarkers()
+//initialize(50.38,3.08)
+//getMarkers()
