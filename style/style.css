@@ -88,8 +88,8 @@ main {
 }
 
 /*--------------------textbox----------------*/
-input[type=text] {
-  width: 70px;
+input[type=number] {
+  width: 55px;
   padding: 9px 9px;
   margin-left:0px;
   font-size: 14px;
