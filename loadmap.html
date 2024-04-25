@@ -20,7 +20,7 @@
           <header>CERI-SN IMT M-planner v0.0</header>
           <nav>
             <label for="step">Discretization step:</label>
-            <input id="step" type="text" placeholder="5"/>
+            <input id="step" type="number" min="1" max="10" size="10" step="1" placeholder="5"/>
             <button class="button button1" onclick="getDiscretizationstep()">Conf. step</button>
             <span id="displaySelectedstep"></span>
             <button class="button button2">Mesh</button>
