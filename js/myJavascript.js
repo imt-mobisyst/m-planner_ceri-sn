@@ -1,3 +1,10 @@
+var latGridValues = [];
+var lngGridValues = [];
+var startPoint = L.marker();
+
+
+
+
 //--------confirm the discretization steps--------
 function getDiscretizationstep() {
   var step, placeHolder, selectedStep;
@@ -9,10 +16,10 @@ function getDiscretizationstep() {
 //--------initailizingMapobject--------
 let config = {
   minZoom: 1,
-  maxZoom: 30,
+  maxZoom: 40,
 };
 //--------magnification with which the map will start--------
-const zoom = 16;
+const zoom = 15;
 //--------CERI-SN IMT co-ordinates--------
 const lat = 50.36667;
 const lng = 3.06667;
@@ -22,7 +29,7 @@ const map = L.map('map', config).setView([lat, lng], zoom);
 map.options.zoomDelta = 0.52;
 
 googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-  maxZoom: 30,
+  maxZoom: 40,
   subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
 }).addTo(map);
 

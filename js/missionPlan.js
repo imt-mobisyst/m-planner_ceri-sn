@@ -1,10 +1,11 @@
-var map
+//var map
 var clickedLocations = [];
 var polygon;
 var gridCoordinates = []; // Grid points
 var missionPoints = L.layerGroup()
+var gridLayer = L.layerGroup()
 var llOffset = 0.0000666666666667;
-var drawGridBox = false;
+var drawGridBox = false;œ
 var startPoint = L.marker();
 
 var latGridValues = [];
@@ -64,8 +65,8 @@ function computeBounds(list) {
 
 function createGridLines(bounds) {
 
-    llOffset = parseFloat(document.getElementById("resolution").value)
-    document.getElementById('log').innerHTML = "llOffset: " + llOffset 
+    // llOffset = parseFloat(document.getElementById("resolution").value)
+    // document.getElementById('log').innerHTML = "llOffset: " + llOffset 
     lngPolylines = [];
     var north = bounds.getNorthEast().lat;
     var east = bounds.getNorthEast().lng;
@@ -85,8 +86,8 @@ function createGridLines(bounds) {
         
         ];
 
-    var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
-
+    // var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+    gridLayer.addLayer(L.polyline(latlngs, {color: 'red'}))
         
 
     for (var latitude = bottomLat; latitude <= topLat; latitude += llOffset) {
@@ -96,7 +97,8 @@ function createGridLines(bounds) {
         [latitude, rightLong],
         ];
 
-        var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+        // var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+        gridLayer.addLayer(L.polyline(latlngs, {color: 'red'}))
         latGridValues.push(latitude)
         
     }
@@ -107,10 +109,13 @@ function createGridLines(bounds) {
         [bottomLat, longitude],
         ];
 
-        var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+        // var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+        gridLayer.addLayer(L.polyline(latlngs, {color: 'red'}))
         lngGridValues.push(longitude)
 
     }
+
+    gridLayer.addTo(map)
 
     // zoom the map to the polyline
     map.fitBounds(bounds);
@@ -127,9 +132,28 @@ function showCoordOnMap(){
 }
 
 function toggleGrid() {
+
+    var layers = drawnItems.getLayers();
+
+    // Iterate over each layer to get its coordinates
+    layers.forEach(function(layer) {
+        // Check the type of the layer
+        if (layer instanceof L.Marker) {
+            // For markers, get the marker's coordinates
+            var markerCoordinates = layer.getLatLng();
+            // console.log('Marker coordinates:', markerCoordinates);
+        } else if (layer instanceof L.Polygon) {
+            // For polylines and polygons, get the coordinates of their vertices
+            polygon = layer;
+            var polylineCoordinates = layer.getLatLngs();
+            // console.log('Polyline/Polygon coordinates:', polylineCoordinates[0]);
+
+        }
+        // You can add more conditions for other types of layers if needed
+        clickedLocations = polylineCoordinates[0];
+    });
     if (! drawGridBox){
         drawGridBox = !drawGridBox;
-        document.getElementById('boolean').innerHTML= "boolean: " + drawGridBox
         if (drawGridBox) {
             boundes = computeBounds(clickedLocations)
             createGridLines(boundes);
@@ -141,7 +165,36 @@ function toggleGrid() {
 
 
 
+function clearLayer() {
+
+        for(i in map._layers) {
+            console.log("layer : " + typeof map._layers[i]);
+            if(map._layers[i]._path != undefined && map._layers[i]===layerName) {
+                try {
+                    map.removeLayer(map._layers[i]);
+                }
+                catch(e) {
+                    console.log("problem with " + e + map._layers[i]);
+                }
+            }
+        }
+        
+
+}
+
+
 function clearGrid() {
+    if (drawGridBox){
+
+        map.removeLayer(gridLayer)
+        drawGridBox = !drawGridBox;  
+    }
+    else {
+
+        // No grid to delete
+    }
+}
+function clearAll() {
     if (drawGridBox){
 
         for(i in map._layers) {
@@ -154,7 +207,6 @@ function clearGrid() {
                 }
             }
         }
-        drawGridBox = !drawGridBox;  
     }
 }
 
@@ -167,10 +219,10 @@ function generateGridCoordinates() {
             gridCoordinates.push({lat: lat, lng: lng});
         });
                 });
-
-
     
 }
+
+
 function toggleCoordinates() {
     var coordIcon = L.divIcon({className: 'leaflet-div-icon'});
     var coordIconHover = L.divIcon({className: 'leaflet-div-icon'});
@@ -211,7 +263,7 @@ function deactivateRemoveEventOnCoord() {
 
 function addPathPonit(){
 
-    //deactivateClickEventOnMap();
+    activateClickEventOnMap();
     var coordIcon = L.divIcon({className: 'leaflet-div-icon'});
     map.on('click', function(e) {        
         var clickedLocation= e.latlng;
@@ -233,8 +285,9 @@ function addPathPonit(){
 }
 
 
-function isMarkerInsidePolygon(marker, poly) {
-    var polyPoints = poly.getLatLngs()[0];       
+function isMarkerInsidePolygon(marker, polyg) {
+
+    var polyPoints = polyg.getLatLngs()[0];       
     var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
     console.log("poly  : " + polyPoints[0].lat)   ; 
     var inside = false;
@@ -292,6 +345,12 @@ function layerGroupClickHandler(event) {
 
 
     }
+
+    if (pointOption =="start-point"){
+
+        addPathPonit()
+
+        }
     
 }
 
