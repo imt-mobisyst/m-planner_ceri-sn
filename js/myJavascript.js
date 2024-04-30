@@ -272,7 +272,11 @@ map.on(L.Draw.Event.CREATED, function (event) {
     props.radius = layer.getRadius();
   }
   layer.on('click', function(event){if( confirm("Restricted Zone?")) {
-                                      restrictedZones.push(layer)
+                                      layer. setStyle({fillColor: '#0000FF', color : '0000FF'});
+                                      restrictedZones.push(layer);
+                                      }
+                                      else{
+                                        missionZones.push(layer);
                                       }
   });
   drawnItems.addLayer(layer);

@@ -155,13 +155,34 @@ function toggleGrid() {
         // You can add more conditions for other types of layers if needed
         
     });
-    if (! drawGridBox && clickedLocations){
-        drawGridBox = !drawGridBox;
-        if (drawGridBox) {
+    // if (! drawGridBox && clickedLocations){
+    //     drawGridBox = !drawGridBox;
+    //     if (drawGridBox) {
+    //         boundes = computeBounds(clickedLocations)
+    //         createGridLines(boundes);
+    //     } 
+    // }
+    drawGrid();
+}
+
+
+function drawGrid(){
+
+    if (drawGridBox){
+
+        clearGrid();
+    }
+        missionZones.forEach(function(zone) {
+            clickedLocations = zone.getLatLngs()[0];   
+            console.log(clickedLocations)
             boundes = computeBounds(clickedLocations)
             createGridLines(boundes);
-        } 
-    }
+        
+    });
+    gridLayer.addTo(map)
+    drawGridBox = !drawGridBox;
+    
+
 }
 
 
@@ -277,9 +298,16 @@ function toggleCoordinates() {
         marker.on('mouseout', function() {
             marker.closePopup();
         });
-        if(isMarkerInsidePolygon(marker, polygon)) {
-            missionPoints.addLayer(marker)
-        }
+        missionZones.forEach(function(missionZone){
+
+            if(isMarkerInsidePolygon(marker, missionZone)) {
+                if(!(restrictedZones.some((zone) => isMarkerInsidePolygon(marker, zone)))) {
+                    missionPoints.addLayer(marker);
+                }
+
+            }
+        });
+        
         
     });
     missionPoints.addTo(map)
