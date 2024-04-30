@@ -319,7 +319,19 @@ function layerGroupClickHandler(event) {
     }
     if (pointOption =="remove-point"){
 
-        event.target.remove()
+        if (event.target === startPoint){
+
+            if (window.confirm("Do you really want to remove the start point?")) {
+                event.target.remove();
+                startPoint = L.marker();
+              }
+              
+
+        }
+        else{
+            event.target.remove()
+
+        }
         //console.log("problem with " + e );
 
     }
