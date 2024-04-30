@@ -1,6 +1,11 @@
+
+
 var latGridValues = [];
 var lngGridValues = [];
 var startPoint = L.marker();
+
+var missionZones = [];
+var restrictedZones = [];
 
 
 
@@ -266,7 +271,10 @@ map.on(L.Draw.Event.CREATED, function (event) {
   if (type === 'circle') {
     props.radius = layer.getRadius();
   }
-
+  layer.on('click', function(event){if( confirm("Restricted Zone?")) {
+                                      restrictedZones.push(layer)
+                                      }
+  });
   drawnItems.addLayer(layer);
 });
 

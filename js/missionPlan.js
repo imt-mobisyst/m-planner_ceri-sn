@@ -1,3 +1,5 @@
+
+
 //var map
 var clickedLocations = [];
 var polygon;
@@ -146,13 +148,14 @@ function toggleGrid() {
             // For polylines and polygons, get the coordinates of their vertices
             polygon = layer;
             var polylineCoordinates = layer.getLatLngs();
+            clickedLocations = polylineCoordinates[0];
             // console.log('Polyline/Polygon coordinates:', polylineCoordinates[0]);
 
         }
         // You can add more conditions for other types of layers if needed
-        clickedLocations = polylineCoordinates[0];
+        
     });
-    if (! drawGridBox){
+    if (! drawGridBox && clickedLocations){
         drawGridBox = !drawGridBox;
         if (drawGridBox) {
             boundes = computeBounds(clickedLocations)
@@ -160,6 +163,43 @@ function toggleGrid() {
         } 
     }
 }
+
+
+
+function checkTranspassing(){
+
+    var layers = drawnItems.getLayers();
+    console.log('inside transpassing')
+    layers.forEach(function(layer) {
+
+
+        if ((layer instanceof L.Polyline) && !(layer instanceof L.Polygon)){
+
+            pathLine = layer;
+            console.log("got a layer");
+            
+            if(!(restrictedZones.some((zone) => zone.getBounds().intersects(pathLine.getBounds())))){
+                console.log('no probleeeeeem');
+
+            }
+            else{
+                console.log(' probleeeeeem');
+                layer.remove();
+
+            }
+
+        }
+        else {
+            console.log("not a polyline" +layer.constructor.name);
+
+        }
+
+
+    });
+
+
+}
+
 
 
 
@@ -289,12 +329,12 @@ function isMarkerInsidePolygon(marker, polyg) {
 
     var polyPoints = polyg.getLatLngs()[0];       
     var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
-    console.log("poly  : " + polyPoints[0].lat)   ; 
+    // console.log("poly  : " + polyPoints[0].lat)   ; 
     var inside = false;
     for (var i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
         var xi = polyPoints[i].lat, yi = polyPoints[i].lng;
         var xj = polyPoints[j].lat, yj = polyPoints[j].lng;
-        console.log("values : " + xi + " , " + yi + " , " + xj + " , " + yj + " , " + x + " , " + x + " , ");
+        // console.log("values : " + xi + " , " + yi + " , " + xj + " , " + yj + " , " + x + " , " + x + " , ");
         var intersect = ((yi > y) != (yj > y))
             && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
         if (intersect) inside = !inside;
