@@ -16,6 +16,7 @@ var lngGridValues = [];
 var bounds = L.latLngBounds();
 
 
+//--------usefull for tests to show the map and initilize on a window--------
 function initialize(oLat, oLon) { 
 
     map = new L.map('map-canvas').setView([oLat, oLon], 13);
@@ -43,6 +44,7 @@ function initialize(oLat, oLon) {
     
 }
 
+//--------getting bounds of a list of markers--------
 function computeBounds(list) {
     if (!list || list.length === 0) {
         throw new Error("List is empty");
@@ -66,6 +68,7 @@ function computeBounds(list) {
 
 }
 
+//--------creating line on map--------
 function createGridLines(bounds) {
 
     // llOffset = parseFloat(document.getElementById("resolution").value)
@@ -134,6 +137,7 @@ function showCoordOnMap(){
 
 }
 
+
 function toggleGrid() {
 
     var layers = drawnItems.getLayers();
@@ -166,7 +170,7 @@ function toggleGrid() {
     drawGrid();
 }
 
-
+//--------drawi the generated grid on the map--------
 function drawGrid(){
 
     if (drawGridBox){
@@ -187,7 +191,7 @@ function drawGrid(){
 }
 
 
-
+//--------to  be moved to path planner--------
 function checkTranspassing(){
 
     var layers = drawnItems.getLayers();
@@ -201,11 +205,9 @@ function checkTranspassing(){
             lines.push(layer)
             
             if(!(restrictedZones.some((zone) => zone.getBounds().intersects(pathLine.getBounds())))){
-                // console.log('no probleeeeeem');
 
             }
             else{
-                // console.log(' probleeeeeem');
                 layer.remove();
 
             }
@@ -274,6 +276,7 @@ function clearAll() {
     }
 }
 
+//--------generated the grid on the selected zone--------
 function generateGridCoordinates() {
 
 
@@ -286,7 +289,7 @@ function generateGridCoordinates() {
     
 }
 
-
+//--------generate and show path inside mission zone and outside restricted zone--------
 function toggleCoordinates() {
     var coordIcon = L.divIcon({className: 'leaflet-div-icon'});
     var coordIconHover = L.divIcon({className: 'leaflet-div-icon'});
@@ -332,6 +335,7 @@ function deactivateRemoveEventOnCoord() {
     map.off('click');
 }
 
+//--------adding a point to generated path points--------
 function addPathPonit(){
 
     activateClickEventOnMap();
@@ -355,7 +359,7 @@ function addPathPonit(){
 
 }
 
-
+//--------checks if a marker is inside a polygone--------
 function isMarkerInsidePolygon(marker, polyg) {
 
     var polyPoints = polyg.getLatLngs()[0];       
@@ -374,7 +378,7 @@ function isMarkerInsidePolygon(marker, polyg) {
     return inside;
 };
 
-
+//--------return true if line1 and line2 intersects--------
 function lineSegmentsIntersect(line1, line2) {
     let line1point1 = line1.getLatLngs()[0];
     let line1point2 = line1.getLatLngs()[1];
@@ -390,6 +394,7 @@ function lineSegmentsIntersect(line1, line2) {
     return ccw(line1point1, line2point1, line2point2) !== ccw(line1point2, line2point1, line2point2) && ccw(line1point1, line1point2, line2point1) !== ccw(line1point1, line1point2, line2point2);
 }
 
+//--------getting everything from the map--------
 function getMarkers(){
 
     map.eachLayer(function (layer) { 
@@ -397,6 +402,7 @@ function getMarkers(){
     });
 }
 
+//--------click options on path points--------
 function layerGroupClickHandler(event) {
 
     var pointOption = document.getElementById("point-option-select").value;
