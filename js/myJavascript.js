@@ -7,6 +7,8 @@ var startPoint = L.marker();
 var missionZones = [];
 var restrictedZones = [];
 
+var lines = []
+
 
 
 

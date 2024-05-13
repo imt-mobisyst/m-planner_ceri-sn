@@ -15,6 +15,7 @@ var lngGridValues = [];
 
 var bounds = L.latLngBounds();
 
+
 function initialize(oLat, oLon) { 
 
     map = new L.map('map-canvas').setView([oLat, oLon], 13);
@@ -197,14 +198,14 @@ function checkTranspassing(){
         if ((layer instanceof L.Polyline) && !(layer instanceof L.Polygon)){
 
             pathLine = layer;
-            console.log("got a layer");
+            lines.push(layer)
             
             if(!(restrictedZones.some((zone) => zone.getBounds().intersects(pathLine.getBounds())))){
-                console.log('no probleeeeeem');
+                // console.log('no probleeeeeem');
 
             }
             else{
-                console.log(' probleeeeeem');
+                // console.log(' probleeeeeem');
                 layer.remove();
 
             }
@@ -217,6 +218,8 @@ function checkTranspassing(){
 
 
     });
+
+    console.log('cross lines : ' + lineSegmentsIntersect(lines[0], lines[1]));
 
 
 }
@@ -371,6 +374,22 @@ function isMarkerInsidePolygon(marker, polyg) {
     return inside;
 };
 
+
+function lineSegmentsIntersect(line1, line2) {
+    let line1point1 = line1.getLatLngs()[0];
+    let line1point2 = line1.getLatLngs()[1];
+  
+    let line2point1 = line2.getLatLngs()[0];
+    let line2point2 = line2.getLatLngs()[1];
+
+    console.log(line1point1 +' : ' +line1point2);
+    function ccw(l1p1, l1p2, l2p1) {
+        return (l2p1.lng - l1p1.lng) * (l1p2.lat - l1p1.lat) > (l1p2.lng - l1p1.lng) * (l2p1.lat - l1p1.lat);
+    }
+
+    return ccw(line1point1, line2point1, line2point2) !== ccw(line1point2, line2point1, line2point2) && ccw(line1point1, line1point2, line2point1) !== ccw(line1point1, line1point2, line2point2);
+}
+
 function getMarkers(){
 
     map.eachLayer(function (layer) { 
@@ -426,7 +445,7 @@ function layerGroupClickHandler(event) {
 
     }
 
-    if (pointOption =="start-point"){
+    if (pointOption =="add-point"){
 
         addPathPonit()
 
