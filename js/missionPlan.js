@@ -14,6 +14,7 @@ var latGridValues = [];
 var lngGridValues = [];
 
 var bounds = L.latLngBounds();
+var MAX_NEIGHBOURS = 8;
 
 
 //--------usefull for tests to show the map and initilize on a window--------
@@ -298,7 +299,7 @@ function toggleCoordinates() {
         //marker.on('click', e => e.target.remove() );
         marker.on('mouseover', function() {
             marker.icon = coordIconHover;
-            marker.bindPopup("Click to apply action!").openPopup();
+            marker.bindPopup("Click to apply action on id : !"+ marker._leaflet_id).openPopup();
         });
         marker.on('click', layerGroupClickHandler);
         marker.on('mouseout', function() {
@@ -408,7 +409,7 @@ function layerGroupClickHandler(event) {
     var pointOption = document.getElementById("point-option-select").value;
     if (pointOption =="show-coord"){
 
-        alert('Layer Group clicked at: ' + event.target.getLatLng());
+        alert('Layer Group clicked at: ' + event.target.getLatLng() + event.target._leaflet_id);
     }
     if (pointOption =="remove-point"){
 
@@ -460,5 +461,149 @@ function layerGroupClickHandler(event) {
 }
 
 
+function haversineDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; 
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    return distance; // Distance in kilometers
+}
+
+
+function calculateDistances(layerGroup) {
+    const points = layerGroup.getLayers();
+    const distances = {};
+    const graph = {};
+
+    for (let i = 0; i < points.length; i++) {
+        const point1 = points[i];
+        const key1 = point1._leaflet_id;
+        const distancesForPoint = [];
+        for (let j = i + 1; j < points.length; j++) {
+            const point2 = points[j];
+            const key2 = point2._leaflet_id;
+            const distanceKey = key1 + '-' + key2;
+            const backDistanceKey = key2 + '-' + key1;
+            const lat1 = point1.getLatLng().lat;
+            const lon1 = point1.getLatLng().lng;
+            const lat2 = point2.getLatLng().lat;
+            const lon2 = point2.getLatLng().lng;
+            const distance = haversineDistance(lat1, lon1, lat2, lon2);
+            distances[distanceKey] = distance;
+            distances[backDistanceKey] = distance;
+            if (distances.hasOwnProperty(distanceKey)) {
+                distancesForPoint.push({ node: key2, distance: distances[distanceKey] });
+            }
+
+            if (!graph[key1]) {
+                graph[key1] = {};
+            }
+            graph[key1][key2] = distance;
+            if (!graph[key2]) {
+                graph[key2] = {};
+            }
+            graph[key2][key1] = distance;
+        }
+        // Sort distances in ascending order
+        distancesForPoint.sort((a, b) => a.distance - b.distance);
+        //console.log(distancesForPoint)
+        // Take the 8 smallest distances
+        const minDistances = distancesForPoint.slice(0, 8);
+        //console.log(minDistances)
+
+        
+
+    }
+    console.log(graph)
+    for(const [key, value] of Object.entries(graph)){
+
+        console.log(`${key} ${value}`);
+    }
+    return graph;
+}
+
+// function updateGraphWithDistances(graph, distances, layerGroup) {
+//     const points = layerGroup.getLayers();
+    
+//     for (let i = 0; i < points.length; i++) {
+//         const point1 = points[i];
+//         const key1 = point1._leaflet_id;
+//         const distancesForPoint = [];
+
+//         // Collect distances from point1 to other points
+//         for (let j = 0; j < points.length; j++) {
+//             if (i !== j) {
+//                 const point2 = points[j];
+//                 const key2 = point2._leaflet_id;
+//                 const distanceKey = key1 + '-' + key2;
+//                 if (distances.hasOwnProperty(distanceKey)) {
+//                     distancesForPoint.push({ node: key2, distance: distances[distanceKey] });
+//                 }
+//             }
+//         }
+
+//         // Sort distances in ascending order
+//         distancesForPoint.sort((a, b) => a.distance - b.distance);
+
+//         // Take the 8 smallest distances
+//         const minDistances = distancesForPoint.slice(0, 8);
+
+//         // Update the graph with the 8 smallest distances
+//         for (const { node, distance } of minDistances) {
+//             if (!graph[key1]) {
+//                 graph[key1] = {};
+//             }
+//             graph[key1][node] = distance;
+//         }
+//     }
+// }
+
+function distanceCalculationTrigger(){
+
+    const distances = calculateDistances(missionPoints);
+    console.log(distances);
+    if (startPoint) {
+        const startNode = startPoint._leaflet_id;
+        const optimizedPath = visitAllNodes(distances, startNode);
+        console.log("Optimized path:", optimizedPath);
+    }
+    
+}
+
+
+function nearestNeighbor(graph, currentNode, visited) {
+    let minDistance = Infinity;
+    let nearestNode = null;
+    for (let neighbor in graph[currentNode]) {
+        if (!visited.has(neighbor) && graph[currentNode][neighbor] < minDistance) {
+            minDistance = graph[currentNode][neighbor];
+            nearestNode = neighbor;
+        }
+    }
+    return nearestNode;
+}
+
+function visitAllNodes(graph, startNode) {
+    const visited = new Set();
+    visited.add(startNode)
+    const path = [startNode];
+    let currentNode = startNode;
+
+    while (visited.size < Object.keys(graph).length) {
+        const nextNode = nearestNeighbor(graph, currentNode, visited);
+        if (nextNode === null) {
+            break;
+        }
+        visited.add(nextNode);
+        path.push(nextNode);
+        currentNode = nextNode;
+    }
+
+    return path;
+}
 //initialize(50.38,3.08)
 //getMarkers()
