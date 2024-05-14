@@ -462,7 +462,7 @@ function layerGroupClickHandler(event) {
 
 
 function haversineDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371; 
+    const R = 6378137; 
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
     const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
@@ -470,7 +470,7 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
               Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
-    return distance; // Distance in kilometers
+    return distance; // Distance in meters
 }
 
 
@@ -526,41 +526,6 @@ function calculateDistances(layerGroup) {
     return graph;
 }
 
-// function updateGraphWithDistances(graph, distances, layerGroup) {
-//     const points = layerGroup.getLayers();
-    
-//     for (let i = 0; i < points.length; i++) {
-//         const point1 = points[i];
-//         const key1 = point1._leaflet_id;
-//         const distancesForPoint = [];
-
-//         // Collect distances from point1 to other points
-//         for (let j = 0; j < points.length; j++) {
-//             if (i !== j) {
-//                 const point2 = points[j];
-//                 const key2 = point2._leaflet_id;
-//                 const distanceKey = key1 + '-' + key2;
-//                 if (distances.hasOwnProperty(distanceKey)) {
-//                     distancesForPoint.push({ node: key2, distance: distances[distanceKey] });
-//                 }
-//             }
-//         }
-
-//         // Sort distances in ascending order
-//         distancesForPoint.sort((a, b) => a.distance - b.distance);
-
-//         // Take the 8 smallest distances
-//         const minDistances = distancesForPoint.slice(0, 8);
-
-//         // Update the graph with the 8 smallest distances
-//         for (const { node, distance } of minDistances) {
-//             if (!graph[key1]) {
-//                 graph[key1] = {};
-//             }
-//             graph[key1][node] = distance;
-//         }
-//     }
-// }
 
 function distanceCalculationTrigger(){
 
