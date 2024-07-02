@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>CERI-SN IMT M-planner</title>
         <meta name="escription" content="BDS aquatic mission planner for aerodynamically eleveted marine drone">
+        <link rel="stylesheet" href="/node_modules/leaflet/dist/leaflet.css" />
         <link rel="stylesheet" href="./style/resources/notiflix.css">
         <link rel="stylesheet" href="./style/style.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -44,11 +45,7 @@
           
           <main>
             <div id="map">
-              <script src="https://cdn.jsdelivr.net/gh/tomickigrzegorz/autocomplete@2.0.1/dist/js/autocomplete.min.js"></script>
-              <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
-              <script src="./js/resources/notiflix.js"></script>
-              <script src="./js/mainScript.js"></script>
-              <script src="./js/discretizationFunctions.js"></script>
+              <script type="module" src="./js/interfaceController.js"></script>
             </div>
           </main>
 
