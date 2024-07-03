@@ -89,14 +89,20 @@ class Zone{
     computeBorders(){
 
         let landmarks = this.landmarks();
+        let line = L.polyline();
+        let borders = [];
         for (var i=0; i<landmarks.length-1; i++){
 
             const lm1 = landmarks[i];
             const lm2 = landmarks[i+1];
+            line = L.polyline([lm1.getLatLng(),lm2.getLatLng()]).addTo(map);
+            borders.push(line);
+
 
         }
-        let coord = [];
-        let line = L.polyline();
+
+        return borders;
+        
       }
 
 
@@ -208,6 +214,69 @@ export default class MissionZone extends Zone {
         
 
     }
+
+    calculateDistGraphOfMarkers() {
+        const points = this.markers.getLayers();
+        const distances = {};
+        const graph = {};
+        const id_array = [];
+        let array_graph = new Array(points.length).fill(null).map(() => new Array(1).fill(0));
+    
+        for (let i = 0; i < points.length; i++) {
+            const point1 = points[i];
+            const key1 = point1._leaflet_id;
+            id_array.push(key1);
+            const distancesForPoint = [];
+            for (let j = i + 1; j < points.length; j++) {
+                const point2 = points[j];
+                const key2 = point2._leaflet_id;
+                const distanceKey = key1 + '-' + key2;
+                const backDistanceKey = key2 + '-' + key1;
+                const lat1 = point1.getLatLng().lat;
+                const lon1 = point1.getLatLng().lng;
+                const lat2 = point2.getLatLng().lat;
+                const lon2 = point2.getLatLng().lng;
+                const distance = haversineDistance(lat1, lon1, lat2, lon2);
+                array_graph[i][j] = distance;
+                array_graph[j][i] = distance;
+                distances[distanceKey] = distance;
+                distances[backDistanceKey] = distance;
+                if (distances.hasOwnProperty(distanceKey)) {
+                    distancesForPoint.push({ node: key2, distance: distances[distanceKey] });
+                }
+    
+                if (!graph[key1]) {
+                    graph[key1] = {};
+                }
+               
+                else{
+                graph[key1][key2] = distance;}
+                if (!graph[key2]) {
+                    graph[key2] = {};
+                }
+                graph[key2][key1] = distance;
+                
+    
+            }
+            array_graph.push(distancesForPoint);
+            // Sort distances in ascending order
+            distancesForPoint.sort((a, b) => a.distance - b.distance);
+            //console.log(distancesForPoint)
+            // Take the 8 smallest distances
+            const minDistances = distancesForPoint.slice(0, 8);
+            //console.log(minDistances)
+    
+            
+    
+        }
+        for(const [key, value] of Object.entries(graph)){
+    
+            console.log(`${key} ${value}`);
+        }
+        //console.log("arrraaaaaaaaaaay", array_graph.slice(0,points.length));
+        return [array_graph.slice(0,points.length), id_array];
+    }
+    
 
     
 }

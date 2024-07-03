@@ -536,33 +536,75 @@ function calculateDistances(layerGroup) {
     return [array_graph.slice(0,points.length), id_array];
 }
 
+function slice2dArray(array, startX, endX, startY, endY){
+
+
+    let section = array.slice(startX, endX + 1).map(i => i.slice(startY, endY + 1));
+
+    return section;
+}
 
 function distanceCalculationTrigger(){
 
     const [distances, poits_ids] = calculateDistances(missionPoints);
     const startNode = startPoint._leaflet_id;
+    let section = [];
+    let sections = [];
     if (startNode){
 
         const optimizedPath = visitAllNodes(distances, startNode);
         console.log("Optimized path:", optimizedPath, distances.length);
-        const path = branchNBound(distances);
-        const draw_path = []
-        for (i = 0; i< path.length; i++){
+        if (distances.length > 24){
+            for (i=0; i< distances.length; i=i+24){
+                section = slice2dArray(distances, i, i+23, i, i+23);
+                sections.push(section);
 
-            point1_id = poits_ids[path[i]];
-            // if (i != path.length-1){
-                
-            //     point2_id = poits_ids[path[i+1]];
-            // }else{
-            //     point2_id = poits_ids[path[0]];
-            // }
-            coord1 = missionPoints.getLayer(point1_id).getLatLng();
-            draw_path.push(coord1)
-
-
+            }
             
         }
-        var polyline = L.polyline(draw_path, {color: 'red'}).addTo(map);
+        else {
+            section.push(distances);
+        }
+        let j = 0;
+        sections.forEach((section) => {
+
+            console.log("befor bnb");
+            const path = branchNBound(section);
+            console.log('agter bnb')
+            const draw_path = []
+            for (i = 0; i< path.length; i++){
+
+                point1_id = poits_ids[path[i]+j];
+                if (i < path.length-1){
+                    
+                    point2_id = poits_ids[path[i+1]+j];
+                }else{
+                    point2_id = poits_ids[path[0]+j];
+                }
+                coord1 = missionPoints.getLayer(point1_id).getLatLng();
+                coord2 = missionPoints.getLayer(point2_id).getLatLng();
+                //draw_path.push(coord1)
+                var polyline = L.polyline([coord1, coord2], {color: 'red'}).addTo(map);
+                polyline.on('click', event => {
+                    if (window.confirm("Do you really want to remove this line?")) {
+                        event.target.remove();
+                    }
+                });
+                
+
+
+                
+            }
+            // var polyline = L.polyline(draw_path, {color: 'red'}).addTo(map);
+            // polyline.on('click', event => {
+            //     if (window.confirm("Do you really want to remove this polyline?")) {
+            //         event.target.remove();
+            //       }
+            // });
+            j = j +24;
+
+        });
+        
 
     }
     else{
