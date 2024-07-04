@@ -58,8 +58,8 @@ class MapInitializer {
     loadSaveControl.map = this.map;
     loadSaveControl.addTo(this.map);
 
-    const drawShapeControl = new DrawShapeControl();
-    drawShapeControl.map = this.map;
+    let drawShapeControl = new DrawShapeControl(this.map);
+    //drawShapeControl.map = this.map;
     drawShapeControl.addTo(this.map);
 
     /*const searchLocationControl = new SearchLocationControl();

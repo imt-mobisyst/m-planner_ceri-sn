@@ -2,15 +2,12 @@
 import CustomControl from './CustomControl.js';
 
 class DrawShapeControl extends CustomControl {
-  constructor() {
+  constructor(mapInstance) {
     super({
       position: 'topleft',
     });
-    this.drawnItems = this.featureGroup().onAdd(map);
-    this.initDrawControl();
-  }
-
-  initDrawControl() {
+    this.map = mapInstance;
+    this.drawnItems = this.onAdd(mapInstance);
     this.map.addControl(
       new L.Control.Draw({
         edit: {
@@ -28,6 +25,8 @@ class DrawShapeControl extends CustomControl {
       })
     );
   }
+
+ 
 
   onAdd(map) {
     this._map = map;
