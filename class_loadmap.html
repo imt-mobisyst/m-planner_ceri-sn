@@ -25,18 +25,14 @@
           <nav>
 
             <label for="step">Discretization step:</label>
+<!--
             <input id="step" type="text" placeholder="5"/>
-            <!-- <button class="button button1" onclick="getDiscretizationstep()">Conf. step</button>
-            <span id="displaySelectedstep"></span>
-            <button class="button button2">Mesh</button>
-            <button class="button button3">Plan</button>
-            <button class="button button4">Replan</button> -->
-            <button class="button button5" onclick="toggleGrid()">Generate / Show Grid</button>
-            <!-- <button class="button button6" onclick="clearAll()">Clear All</button> -->
-            <button class="button button7" onclick="clearGrid()">Clear grid</button>
-            <button class="button button7" onclick="showCoordOnMap()">Show Zone Coord</button>
-            <button class="button button7" onclick="checkTranspassing()">checkTrasspassing</button>
-            <button class="button button7" onclick="distanceCalculationTrigger()">Calculate distances</button>
+-->
+              <input id="step" type="number" placeholder="30" min="10" max="100" class="small-input"/>
+              <button class="button button7" onclick="showGrids()">Discretize</button>
+              <button class="button button5" onclick="toggleGridShow()">Show/Hide Grid</button>
+              <button class="button button7" onclick="showInterstCoordinates()">Show landmarks</button>
+              <button class="button button8" onclick="planMission()">Plan mission</button>
             <!-- <label for="pet-select">Opearions on path point</label> -->
             <select name="Path points options" id="point-option-select"> 
                 <option value="show-coord">Show Coordinates</option>
@@ -56,9 +52,13 @@
               <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
               <script src="./js/resources/notiflix.js"></script>
               <script src="https://cdn.jsdelivr.net/gh/tomickigrzegorz/autocomplete@2.0.1/dist/js/autocomplete.min.js"></script>
-              <script src="./js/myJavascript.js"></script>
+<!--
+                <script src="./js/myJavascript.js"></script>
+-->             <script src="js/utils.js" type="module"> </script>
+                <script src="js/Mapper.js" type="module"> </script>
+                <script src="./js/scripts.js" type="module" ></script>
               <script src="./js/missionPlan.js"></script>
-              
+
               </script> 
             </div>
           </main>
