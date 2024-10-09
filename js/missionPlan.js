@@ -7,7 +7,7 @@ var gridCoordinates = []; // Grid points
 var missionPoints = L.layerGroup()
 var gridLayer = L.layerGroup()
 var llOffset = 0.0000666666666667;
-var drawGridBox = false;œ
+var drawGridBox = false;
 var startPoint = L.marker();
 
 var latGridValues = [];
@@ -72,8 +72,7 @@ function computeBounds(list) {
 //--------creating line on map--------
 function createGridLines(bounds) {
 
-    // llOffset = parseFloat(document.getElementById("resolution").value)
-    // document.getElementById('log').innerHTML = "llOffset: " + llOffset 
+
     lngPolylines = [];
     var north = bounds.getNorthEast().lat;
     var east = bounds.getNorthEast().lng;
@@ -98,7 +97,6 @@ function createGridLines(bounds) {
         
 
     for (var latitude = bottomLat; latitude <= topLat; latitude += llOffset) {
-        // lines of latitude
         var latlngs = [
         [latitude, leftLong],
         [latitude, rightLong],
@@ -110,7 +108,6 @@ function createGridLines(bounds) {
         
     }
     for (var longitude = leftLong; longitude <= rightLong; longitude += llOffset) {
-        // lines of longitude
         var latlngs = [
         [topLat, longitude],
         [bottomLat, longitude],
@@ -122,7 +119,7 @@ function createGridLines(bounds) {
 
     }
 
-    gridLayer.addTo(map)
+    //gridLayer.addTo(map)
 
     // zoom the map to the polyline
     map.fitBounds(bounds);
@@ -131,6 +128,7 @@ function createGridLines(bounds) {
 
 function showCoordOnMap(){
 
+    generateGrid();
     generateGridCoordinates();
     toggleCoordinates();
     deactivateClickEventOnMap()
@@ -139,45 +137,42 @@ function showCoordOnMap(){
 }
 
 
-function toggleGrid() {
+function generateGrid() {
 
     var layers = drawnItems.getLayers();
 
-    // Iterate over each layer to get its coordinates
     layers.forEach(function(layer) {
-        // Check the type of the layer
         if (layer instanceof L.Marker) {
-            // For markers, get the marker's coordinates
             var markerCoordinates = layer.getLatLng();
-            // console.log('Marker coordinates:', markerCoordinates);
         } else if (layer instanceof L.Polygon) {
-            // For polylines and polygons, get the coordinates of their vertices
             polygon = layer;
             var polylineCoordinates = layer.getLatLngs();
             clickedLocations = polylineCoordinates[0];
-            // console.log('Polyline/Polygon coordinates:', polylineCoordinates[0]);
 
         }
-        // You can add more conditions for other types of layers if needed
         
     });
-    // if (! drawGridBox && clickedLocations){
-    //     drawGridBox = !drawGridBox;
-    //     if (drawGridBox) {
-    //         boundes = computeBounds(clickedLocations)
-    //         createGridLines(boundes);
-    //     } 
-    // }
+
     drawGrid();
+}
+
+function toggleGrid() {
+    console.log(drawGridBox)
+    if (drawGridBox) {
+        clearGrid()
+    }
+    else {
+        gridLayer.addTo(map)
+        
+    }
+    drawGridBox = !drawGridBox
+    
 }
 
 //--------drawi the generated grid on the map--------
 function drawGrid(){
 
-    if (drawGridBox){
-
-        clearGrid();
-    }
+ 
         missionZones.forEach(function(zone) {
             clickedLocations = zone.getLatLngs()[0];   
             console.log(clickedLocations)
@@ -185,8 +180,7 @@ function drawGrid(){
             createGridLines(boundes);
         
     });
-    gridLayer.addTo(map)
-    drawGridBox = !drawGridBox;
+    //gridLayer.addTo(map)
     
 
 }
@@ -249,18 +243,15 @@ function clearLayer() {
 
 }
 
-
 function clearGrid() {
+    
     if (drawGridBox){
 
         map.removeLayer(gridLayer)
-        drawGridBox = !drawGridBox;  
     }
-    else {
 
-        // No grid to delete
-    }
 }
+
 function clearAll() {
     if (drawGridBox){
 
@@ -318,7 +309,38 @@ function toggleCoordinates() {
         
     });
     missionPoints.addTo(map)
+    
+}
 
+function exportMissionPointsToJson(missionPoints, startPoint) {
+    const pointsArray = missionPoints.getLayers().map(marker => {
+        const latlng = marker.getLatLng();
+        return {
+            id: marker._leaflet_id, 
+            lat: latlng.lat,
+            lng: latlng.lng
+        };
+    });
+
+    const output = {
+        startPointId: startPoint._leaflet_id, 
+        points: pointsArray
+    };
+
+    const json = JSON.stringify(output);
+    console.log(json);
+    return json
+}
+
+function downloadJson(json, filename) {
+    var blob = new Blob([json], {type: "application/json"});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
 
 function deactivateClickEventOnMap() {
@@ -448,6 +470,8 @@ function layerGroupClickHandler(event) {
         
         event.target.setIcon(startIcon);
         startPoint = event.target;
+        var missionPointsJson = exportMissionPointsToJson(missionPoints,startPoint);
+        downloadJson(missionPointsJson, 'missionPoints.json');
 
 
     }
@@ -457,9 +481,13 @@ function layerGroupClickHandler(event) {
         addPathPonit()
 
         }
+
+    if (pointOption =="add-segment"){
+
+            
+        }
     
 }
-
 
 function haversineDistance(lat1, lon1, lat2, lon2) {
     const R = 6378137; 
@@ -472,7 +500,6 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
     const distance = R * c;
     return distance; // Distance in meters
 }
-
 
 function calculateDistances(layerGroup) {
     const points = layerGroup.getLayers();
@@ -843,6 +870,9 @@ function branchNBound( graph){
          
          
 }
+
+
+
 
 
 //initialize(50.38,3.08)

@@ -1,90 +1,91 @@
-import { layerGroupClickHandler } from './utils.js';
-import { Path } from './Path.js';
+/*import { layerGroupClickHandler } from './utils.js';
+import { Path } from './Path.js';*/
+import {Grid} from "./Grid.js";
 
-class Zone{
+export class Zone{
 
     // Constructor
     constructor(layer) {
         this.id = layer._leaflet_id;
         this.layer = layer;
         this.markers = L.layerGroup();
-        //this.path = new Path();
-        
-        if (layer instanceof L.Circle) {
+        //
 
-            this.forme = Zone.CIRCLE
-        }
-        if (layer instanceof L.Polygone ) {
+    }
 
-            
-            if (layer instanceof L.Rectangle ) {
-
-                this.forme = Zone.RECTANGLE
-            }
-            else {
-                this.forme = Zone.POLYGONE
-            }
-        }
-        
-
-      }
-      // Getters
-      get id() {
-        return this.id;
-      }
-
-      get forme() {
-        return this.forme;
-      }
 
       get landmarks(){
 
-        let polylineCoordinates = layer.getLatLngs();
-        return polylineCoordinates[0];
+        if (this.layer instanceof L.Polygon){
+            let polylineCoordinates = this.layer.getLatLngs();
+            return polylineCoordinates[0];
+        }
+        else if (this.layer instanceof L.Circle){
+            return [this.layer.getLatLng(), this.layer.getRadius()];
 
-        
+        }
+        else
+        {
+            console.log('form not supported yet !!')
+        }
+
+
+
       }
 
-
-      
-
-      
-      
-
-      //Setters
-      set id(value) {
-        this.id = value;
-      }
+    /*
       set forme(value) {
         this.forme = value;
-      }
+      }*/
 
 
-      //methods
       computeBounds() {
 
-        let list = this.landmarks();
-        if (!list || list.length === 0) {
-            throw new Error("List is empty");
-        }
-    
-        var firstLatLng = list[0];
-        var s = firstLatLng.lat,
-            n = firstLatLng.lat,
-            w = firstLatLng.lng,
-            e = firstLatLng.lng;
-    
-        for (var i = 1; i < list.length; i++) {
-            var latlng = list[i];
-            s = Math.min(s, latlng.lat);
-            n = Math.max(n, latlng.lat);
-            w = Math.min(w, latlng.lng);
-            e = Math.max(e, latlng.lng);
-        }
-    
+          if (this.layer instanceof L.Circle){
+
+              let circleLandmarks = this.landmarks;
+
+              const latRadius = (circleLandmarks[1] / 6378137) * (180 / Math.PI); // Latitude degrees
+              const lngRadius = latRadius / Math.cos(circleLandmarks[0].lat * Math.PI / 180); // Longitude degrees
+
+              // Calculate bounds
+              s = circleLandmarks[0].lat - latRadius;
+              n = circleLandmarks[0].lat + latRadius;
+              w = circleLandmarks[0].lng - lngRadius;
+              e = circleLandmarks[0].lng + lngRadius;
+
+          }
+          else if (this.layer instanceof L.Polygon) {
+
+              let list = this.landmarks;
+              if (!list || list.length === 0) {
+                  throw new Error("List is empty");
+              }
+
+              var firstLatLng = list[0];
+              var s = firstLatLng.lat,
+                  n = firstLatLng.lat,
+                  w = firstLatLng.lng,
+                  e = firstLatLng.lng;
+
+              for (var i = 1; i < list.length; i++) {
+                  var latlng = list[i];
+                  s = Math.min(s, latlng.lat);
+                  n = Math.max(n, latlng.lat);
+                  w = Math.min(w, latlng.lng);
+                  e = Math.max(e, latlng.lng);
+              }
+
+          }
+          else {
+              console.log('Forme not supported yet !!')
+          }
+
+
         return new L.latLngBounds(L.latLng(s, w) , L.latLng(n, e));
-    
+
     }
+    /*
 
     computeBorders(){
 
@@ -102,199 +103,75 @@ class Zone{
         }
 
         return borders;
-        
+
       }
-
-
-
     showarkers() {
-
         this.markers.addTo(map);
-
-        
     }
 
     hideMarkers(){
-
         map.removeLayer(markers);
     }
-
-    isMarkerInsidePolygon(marker, polyg) {
-
-        var polyPoints = polyg.getLatLngs()[0];       
-        var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
-        // console.log("poly  : " + polyPoints[0].lat)   ; 
-        var inside = false;
-        for (var i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
-            var xi = polyPoints[i].lat, yi = polyPoints[i].lng;
-            var xj = polyPoints[j].lat, yj = polyPoints[j].lng;
-            // console.log("values : " + xi + " , " + yi + " , " + xj + " , " + yj + " , " + x + " , " + x + " , ");
-            var intersect = ((yi > y) != (yj > y))
-                && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-            if (intersect) inside = !inside;
-        }
-    
-        return inside;
-    };
-
-    
-
+*/
     // static variables for forms
     static POLYGONE = 'polygone';
     static CIRCLE = 'circle';
     static RECTANGLE = 'rectangle';
     // static variables for restrictions
     static TRESPASSING = 'trespassing';
+
+    isMarkerInsideZone(marker) {
+
+        var inside = false;
+        var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
+        var polyPoints = this.landmarks;
+        if (this.layer instanceof L.Polygon){
+            for (var i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
+                var xi = polyPoints[i].lat, yi = polyPoints[i].lng;
+                var xj = polyPoints[j].lat, yj = polyPoints[j].lng;
+                var intersect = ((yi > y) != (yj > y))
+                    && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+                if (intersect) inside = !inside;
+            }
+        }
+        else if (this.layer instanceof L.Circle) {
+            const distance = marker.getLatLng().distanceTo(this.landmarks[0]);
+            return distance <= this.landmarks[1];
+        }
+        else{
+
+        }
+
+
+        return inside;
+    };
+
+
 }
 
 
-export default class MissionZone extends Zone {
+export class MissionZone extends Zone {
 
     constructor(layer){
 
         super(layer);
-        
+
         this.restrictedZones = [];
         this.grid = new Grid(Grid.DEFAULTRESOLUTION, this.id)
-        
-    }
-
-    addRestrictedZone(zone){
-
-        const restricted = new RestrictedZone();
-        restricted = zone;
-        this.restrictedZones.push(restricted);
-    }
-
-
-    generateZoneMarkers(){
-
-        var coordIcon = L.divIcon({className: 'leaflet-div-icon'});
-        var coordIconHover = L.divIcon({className: 'leaflet-div-icon'});
-        this.grid.gridCoordinates.forEach((coord) => {
-        var marker = L.marker([coord.lat, coord.lng], {icon : coordIcon});
-            //marker.on('click', e => e.target.remove() );
-            marker.on('mouseover', function() {
-                marker.icon = coordIconHover;
-                marker.bindPopup("Click to apply action on id : !"+ marker._leaflet_id).openPopup();
-            });
-            marker.on('click', layerGroupClickHandler);
-            marker.on('mouseout', function() {
-                marker.closePopup();
-            });
-
-            if (this.forme === Zone.POLYGONE || this.forme === Zone.RECTANGLE)
-            {
-                let zoneOfRestriction = null;
-                const isInsideRestrictedZone = restrictedZones.some((zone) => {
-                    if (isMarkerInsidePolygon(marker, zone)) {
-                      zoneOfRestriction = zone;
-                      return true;
-                    }
-                    return false;
-                  });
-                  
-
-                if(isMarkerInsidePolygon(marker, layer)) {
-                        if(!isInsideRestrictedZone) {
-                            this.markers.addLayer(marker);
-                        }
-                        else{
-
-                            zoneOfRestriction.markers.addLayer(marker)
-
-                        }
-
-                }
-                }
-           
-            
-            
-        });
-        
 
     }
 
-    calculateDistGraphOfMarkers() {
-        const points = this.markers.getLayers();
-        const distances = {};
-        const graph = {};
-        const id_array = [];
-        let array_graph = new Array(points.length).fill(null).map(() => new Array(1).fill(0));
-    
-        for (let i = 0; i < points.length; i++) {
-            const point1 = points[i];
-            const key1 = point1._leaflet_id;
-            id_array.push(key1);
-            const distancesForPoint = [];
-            for (let j = i + 1; j < points.length; j++) {
-                const point2 = points[j];
-                const key2 = point2._leaflet_id;
-                const distanceKey = key1 + '-' + key2;
-                const backDistanceKey = key2 + '-' + key1;
-                const lat1 = point1.getLatLng().lat;
-                const lon1 = point1.getLatLng().lng;
-                const lat2 = point2.getLatLng().lat;
-                const lon2 = point2.getLatLng().lng;
-                const distance = haversineDistance(lat1, lon1, lat2, lon2);
-                array_graph[i][j] = distance;
-                array_graph[j][i] = distance;
-                distances[distanceKey] = distance;
-                distances[backDistanceKey] = distance;
-                if (distances.hasOwnProperty(distanceKey)) {
-                    distancesForPoint.push({ node: key2, distance: distances[distanceKey] });
-                }
-    
-                if (!graph[key1]) {
-                    graph[key1] = {};
-                }
-               
-                else{
-                graph[key1][key2] = distance;}
-                if (!graph[key2]) {
-                    graph[key2] = {};
-                }
-                graph[key2][key1] = distance;
-                
-    
-            }
-            array_graph.push(distancesForPoint);
-            // Sort distances in ascending order
-            distancesForPoint.sort((a, b) => a.distance - b.distance);
-            //console.log(distancesForPoint)
-            // Take the 8 smallest distances
-            const minDistances = distancesForPoint.slice(0, 8);
-            //console.log(minDistances)
-    
-            
-    
-        }
-        for(const [key, value] of Object.entries(graph)){
-    
-            console.log(`${key} ${value}`);
-        }
-        //console.log("arrraaaaaaaaaaay", array_graph.slice(0,points.length));
-        return [array_graph.slice(0,points.length), id_array];
-    }
-    
-
-    
 }
 
 
-class RestrictedZone extends Zone {
+export class RestrictedZone extends Zone {
 
-    constructor(id, layer, typeOfRestriction){
+    constructor(layer,  typeOfRestriction = Zone.TRESPASSING){
 
-        super(id, layer);
+        super(layer);
         this.restrictionType = typeOfRestriction;
     }
 
-
-    hideMarkers(){
-
-
-    }
 
 
 }

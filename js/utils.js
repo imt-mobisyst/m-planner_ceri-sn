@@ -1,4 +1,4 @@
-import { startPoint } from "./Path";
+import { mission} from "./scripts.js";
 
 export function layerGroupClickHandler(event) {
 
@@ -20,9 +20,9 @@ export function layerGroupClickHandler(event) {
         }
         else{
             event.target.remove()
+            mission.areaLandmarks.removeLayer(event.target)
 
         }
-        //console.log("problem with " + e );
 
     }
 
@@ -32,14 +32,14 @@ export function layerGroupClickHandler(event) {
         var normalIcon = L.divIcon({className: 'leaflet-div-icon'});
         var markerPoistion = event.target.getLatLng();
         var markerStart = L.marker([markerPoistion.lat, markerPoistion.lng], {icon : startIcon});
-        if( startPoint.getLatLng()){
+        if( mission.startPoint.getLatLng()){
 
-            startPoint.setIcon(normalIcon)
+            mission.startPoint.setIcon(normalIcon)
             console.log("somthong aleady selected, modifying" );
         }
         
         event.target.setIcon(startIcon);
-        startPoint = event.target;
+        mission.startPoint = event.target;
 
 
     }
@@ -51,6 +51,8 @@ export function layerGroupClickHandler(event) {
         }
     
 }
+
+
 
 
 export function haversineDistance(lat1, lon1, lat2, lon2) {
@@ -130,7 +132,6 @@ export function nearestNeighbor(graph, currentNode, visited) {
     }
     return nearestNode;
 }
-
 
 export function branchNBound( graph){
 
@@ -326,19 +327,6 @@ export function branchNBound( graph){
          
 }
 
-
-export function haversineDistance(lat1, lon1, lat2, lon2) {
-    const R = 6378137; 
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c;
-    return distance; // Distance in meters
-}
-
 export function slice2dArray(array, startX, endX, startY, endY){
 
 
@@ -346,3 +334,35 @@ export function slice2dArray(array, startX, endX, startY, endY){
 
       return section;
 }
+
+export function exportMissionPointsToJson(missionPoints, startPoint) {
+    const pointsArray = missionPoints.getLayers().map(marker => {
+        const latlng = marker.getLatLng();
+        return {
+            id: marker._leaflet_id,
+            lat: latlng.lat,
+            lng: latlng.lng
+        };
+    });
+
+    const output = {
+        startPointId: startPoint._leaflet_id,
+        points: pointsArray
+    };
+
+    const json = JSON.stringify(output);
+    //console.log(json);
+    return json
+}
+
+export function downloadJson(json, filename) {
+    var blob = new Blob([json], {type: "application/json"});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+

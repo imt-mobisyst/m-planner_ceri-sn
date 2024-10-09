@@ -1,7 +1,11 @@
-import { Zone } from './Zone.js';
+import { Zone , RestrictedZone , MissionZone } from './Zone.js';
+import { layerGroupClickHandler} from "./utils.js";
+
+export let  gridVisible = false;
+export let landmarkLayer
 
 
-class Map {
+export class Mapper {
     constructor(mapId, options = {}) {
         this.mapId = mapId;
         this.map = null;
@@ -43,10 +47,20 @@ class Map {
     }
 
     addMarker(lat, lng, popupText = '') {
-        const marker = L.marker([lat, lng]).addTo(this.map);
-        if (popupText) {
-            marker.bindPopup(popupText);
-        }
+        let coordIcon = L.divIcon({className: 'leaflet-div-icon'});
+        let coordIconHover = L.divIcon({className: 'leaflet-div-icon'});
+
+        let marker = L.marker([lat, lng], {icon: coordIcon});
+        //marker.on('click', e => e.target.remove() );
+        marker.on('mouseover', function () {
+            marker.icon = coordIconHover;
+            marker.bindPopup("Click to apply action on id : !" + marker._leaflet_id).openPopup();
+        });
+        marker.on('click', layerGroupClickHandler);
+        marker.on('mouseout', function () {
+            marker.closePopup();
+        });
+        return marker
     }
 
     addCircle(lat, lng, radius, options = {}) {
@@ -67,7 +81,10 @@ class Map {
 
     drawPannelControl(){
 
-        const drawControl = new L.Control.Draw({
+
+        let drawnItems = new L.featureGroup();
+        this.map.addLayer(drawnItems);
+        let drawControl = new L.Control.Draw({
             draw: {
                 polygon: true,
                 circle: true,
@@ -77,22 +94,101 @@ class Map {
                 circlemarker: false
             },
             edit: {
-                featureGroup: new L.FeatureGroup().addTo(this.map)
+
+                featureGroup: drawnItems, //new L.FeatureGroup().addTo(this.map)
+                remove: true
             }
         });
 
         this.map.addControl(drawControl);
-        this.drawEventListener()
+        this.drawEventListener(drawnItems)
+
+
+        //2e logique
+        /*let drawnItems = L.featureGroup().addTo(this.map);
+
+        this.map.addControl(
+            new L.Control.Draw({
+                edit: {
+                    featureGroup: drawnItems,
+                    poly: {
+                        allowIntersection: true,
+                    },
+                },
+                draw: {
+                    polygon: {
+                        allowIntersection: true,
+                        showArea: true,
+                    },
+                },
+            })
+        );
+
+
+        this.drawEventListener()*/
 
     }
 
-    drawEventListener(){
+    drawEventListener(drawnItems){
 
         this.map.on(L.Draw.Event.CREATED, (event) => {
-            const layer = event.layer;
-            this.map.addLayer(layer);
+
+
+            let typeOfDraw = event.layerType;
+            let layer = event.layer;
+            drawnItems.addLayer(layer);
+            this.map.addLayer(layer); //Should bve here to get the layer _leaflet_id
+
+            if( confirm("Restricted Zone?")) {
+                layer. setStyle({fillColor: '#FF0000', color : '0000FF'});
+                const drawnZone = new RestrictedZone(layer)
+
+                this.zones.push(drawnZone);
+            }
+            else{
+                const drawnZone = new MissionZone(layer)
+                this.zones.push(drawnZone);
+            }
+
         });
 
-        const drawnZone = new Zone(layer)
+        this.map.on('draw:deleted', (event) => {
+            if (drawnItems.getLayers().length === 0) {
+                this.zones = []
+            }
+            else {
+                console.log('There are no drawn layers on the map')
+            }
+        });
     }
+
+
+    removeLayerbyId(id){
+        if (id){
+            this.map.eachLayer((layer) => {
+                if (layer._leaflet_id === id) {
+                    console.log('layer found removing',layer._leaflet_id ,  id)
+                    this.map.removeLayer(layer);
+
+                }
+            });
+        }
+        else{
+            console.log('Layer doesn\'t exist')
+        }
+    }
+
+
 }
+
+
+
+export function setVisibleGrid(value){
+
+    gridVisible = value
+}
+
+export function setLandmarkLayer(value){
+    landmarkLayer = value
+}
+

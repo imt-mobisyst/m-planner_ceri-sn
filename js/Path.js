@@ -1,24 +1,25 @@
 export let startPoint = L.marker();
+/*
 import { nearestNeighbor } from './utils.js';
+*/
 
 
-export default class Path{
+export class Path{
 
 
 
-    constructor(markers){
+    constructor(startPoint){
 
     // get markers frome zone object
 
     if (startPoint){
 
-        this.this.startNode = startPoint._leaflet_id;
+        this.startPoint = startPoint._leaflet_id;
+    }
+    else{
 
-    // path generation logic
-    
-    }else{
-
-        throw new Error('You have to select a starting point!');
+        console.log('You have to select a starting point!')
+        //throw new Error('You have to select a starting point!');
     }
 
     }
@@ -28,7 +29,7 @@ export default class Path{
         visited.add(this.startNode)
         const path = [this.startNode];
         let currentNode = this.startNode;
-    
+
         while (visited.size < Object.keys(graph).length) {
             const nextNode = nearestNeighbor(graph, currentNode, visited);
             if (nextNode === null) {
@@ -38,7 +39,7 @@ export default class Path{
             path.push(nextNode);
             currentNode = nextNode;
         }
-    
+
         return path;
     }
 
