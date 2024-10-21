@@ -67,12 +67,12 @@ To run this project you need to open index.html in a browser :<br>
 
 To run the backend flask server, move inside python folder cd python and do :<br>
 1. **Move to python directory :**  cd python
-2. **Create Python Virtual Environment by running:***<br>
+2. **Create Python Virtual Environment by running:**<br>
 run : python3 -m venv <env_name> <br>
 replace <env_name> by the name of your environment<br>
 source <env_name>/bin/activate<br>
 You should see the environment activated<br>
-3. **Install requirements by running :***<br>
+3. **Install requirements by running :**<br>
 pip install  requirements.txt<br>
 Or run each of needed packages installation inside folder file python/install.txt, it will automatically install dependencies<br>
 4. **Run :** <br>
