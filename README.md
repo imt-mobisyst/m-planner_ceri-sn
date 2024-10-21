@@ -63,17 +63,18 @@ To be able to compare different solutions and the "best" optimized path we defin
 **Pass-through distance** : the total distance of passing over already visited region. <br>
 
 ## Run the project <br>
-To run this project you need to open index.html on a browser :<br>
+To run this project you need to open index.html in a browser :<br>
 
 To run the backend flask server, move inside python folder cd python and do :<br>
-1. **Create Python Virtual Environment by running:***<br>
-python3 -m venv <env_name> <br>
+1. **Move to python directory :**  cd python
+2. **Create Python Virtual Environment by running:***<br>
+run : python3 -m venv <env_name> <br>
 replace <env_name> by the name of your environment<br>
 source <env_name>/bin/activate<br>
 You should see the environment activated<br>
-2. **Install requirements by running :***<br>
+3. **Install requirements by running :***<br>
 pip install  requirements.txt<br>
 Or run each of needed packages installation inside folder file python/install.txt, it will automatically install dependencies<br>
-3. **Run :** <br>
+4. **Run :** <br>
 python3 flask_server.py
 
