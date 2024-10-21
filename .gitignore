@@ -1,15 +1,14 @@
-# Ignore foldes
 docs/
 cpp/
 .idea/
 
 
-# Ignore binary map images
 coverage_path_planning/map/*.png
 
-# Ignore .npy files in maps directory
 coverage_path_planning/maps/*.npy
 
-# Ignore output images
 coverage_path_planning/output_images/*.png
 coverage_path_planning/output_images/*.jpg
+
+
+python/planner_venv
