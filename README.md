@@ -1,19 +1,41 @@
-# ceri-sn_imt_m-planner
+# Aquatic drone mission planner UI/Backend
 ## Folders Organization
 This project is organized into different folder as follows :<br>
 ├── audios<br>
 ├── class_loadmap.html<br>
 ├── cpp<br>
+│ └── BoustrophedonCellularDecompositionPathPlanning<br>
 ├── docs<br>
+│ ├── 1-s2.0-S147466701644557X-main.pdf<br>
+│ ├── 2008.13041.pdf<br>
+│ ├── 4032.pdf<br>
+│ ├── e_star_Preprint.pdf<br>
+│ └── vehicles-03-00027-v2.pdf<br>
 ├── images<br>
 ├── index.html<br>
 ├── js<br>
+│ ├── Grid.js<br>
+│ ├── Mapper.js<br>
+│ ├── Mission.js<br>
+│ ├── missionPlan.js<br>
+│ ├── myJavascript.js<br>
+│ ├── Path.js<br>
+│ ├── resources<br>
+│ ├── scripts.js<br>
+│ ├── utils.js<br>
+│ ├── ZoneController.js<br>
+│ └── Zone.js<br>
 ├── LICENSE<br>
-├── planner_venv<br>
 ├── python<br>
+│ ├── coverage_path_planning<br>
+│ ├── flask_server.py<br>
+│ ├── install.txt<br>
+│ ├── planner_venv<br>
+│ └── requirements.txt<br>
 ├── README.md<br>
-├── structure.txt<br>
 └── style<br>
+  ├── resources<br>
+  └── style.css<br>
 
 ## Explanation :
 
@@ -36,9 +58,9 @@ The visited matrix can help if we want a strategy to visit each point once. or r
 
 ### Metrics 
 To be able to compare different solutions and the "best" optimized path we define three metrics : <br>
-**Coverage Distance**<br> :  the total distance of coverage path.
-**Turn / Rotation number**<br> : the number of left / right turns.
-**Pass-through distance**<br> : the total distance of passing over already visited region. 
+**Coverage Distance** :  the total distance of coverage path.<br>
+**Turn / Rotation number** : the number of left / right turns.<br>
+**Pass-through distance** : the total distance of passing over already visited region. <br>
 
 ## Run the project <br>
 To run this project you need to open index.html on a browser :<br>
