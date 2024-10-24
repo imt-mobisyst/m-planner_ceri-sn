@@ -77,7 +77,3 @@ pip install  requirements.txt<br>
 Or run each of needed packages installation inside folder file python/install.txt, it will automatically install dependencies<br>
 4. **Run :** <br>
 python3 flask_server.py
-
-=======
-# m-planner_ceri-sn
->>>>>>> 512de375198d7c0962cd0b1ff090309f613d709b
