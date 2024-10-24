@@ -13,8 +13,6 @@ CORS(app)
 @app.route('/landmarks', methods=['POST'])
 def receive_json():
     data = request.json
-    #print(data)
-    #sequencePointIds =
     sequence = list(map(int, planner(data)))
     data['path'] = sequence
     return jsonify({"status": "success", "received": data})
