@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Aquatic drone mission planner UI/Backend
 ## Folders Organization
 This project is organized into different folder as follows :<br>
