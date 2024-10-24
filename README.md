@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Aquatic drone mission planner UI/Backend
 ## Folders Organization
 This project is organized into different folder as follows :<br>
@@ -78,3 +79,6 @@ Or run each of needed packages installation inside folder file python/install.tx
 4. **Run :** <br>
 python3 flask_server.py
 
+=======
+# m-planner_ceri-sn
+>>>>>>> 512de375198d7c0962cd0b1ff090309f613d709b
