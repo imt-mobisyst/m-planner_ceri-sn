@@ -2,33 +2,26 @@
 ## Folders Organization
 This project is organized into different folder as follows :<br>
 ├── audios<br>
-├── class_loadmap.html<br>
-├── cpp<br>
-├── docs<br>
-├── images<br>
-├── index.html -->  Used to see interface<br>
+....
+├── index.html **-->  Used to see interface** <br>
 ├── js<br>
-├── LICENSE<br>
-├── node_modules<br>
-├── package.json<br>
-├── package-lock.json<br>
-├── projectServer.js<br>
+...
 ├── python<br>
 │   ├── coverage_path_planning<br>
 │   │   ├── coverage_planner.py<br>
 │   │   ├── coverage_test.py<br>
-│   │   ├── json -->  Used to save json files<br>
+│   │   ├── json **-->  Used to save json files**<br>
 │   │   │   ├── json_to_numpy.py<br>
 │   │   │   ├── missionPoints.json<br>
 │   │   │   ├── __pycache__<br>
 │   │   │   └── updated_missionPoints.json<br>
 
-│   ├── flask_server.py -->  Used to run planner backend<br>
+│   ├── flask_server.py **-->  Used to run planner backend**<br>
 │   ├── install.txt<br>
 │   ├── planner_venv<br>
 │   └── requirements.txt<br>
-├── README.md<br>
-└── style<br>
+├── ...
+└── 
 
 
 ## Explanation :
