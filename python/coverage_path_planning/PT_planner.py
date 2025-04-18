@@ -683,6 +683,7 @@ def main(source, file_path = None, request_data = None):
     """ Generate mission"""
     mission = Mission(data)
     """ Generate image map and numpy format for state of art algoriths"""
+    print("saving iumage")
     mission.map_generator.save_as_image('binary_map')
     mission.map_generator.save_as_npy('map0')
     """ Read binary image """
@@ -711,11 +712,13 @@ def main(source, file_path = None, request_data = None):
     circular_wavefront_sequence, circular_wavefront_cost = PT2.sweeping(mission.starting_point)
     PT2.plot_grid_with_connections(PT2.cost_matrix, circular_wavefront_sequence)
 
+    """ VAR Algorithm"""
+    weighted_sequence = weighted_strategy.weighted_cost(save_cost, save_reachability, save_visited, mission.starting_point)
+
     """ State of Art Algorithm"""
     stateOfArt_sequence = coverage_test.main()
 
-    """ VAR Algorithm"""
-    weighted_sequence = weighted_strategy.weighted_cost(save_cost, save_reachability, save_visited, mission.starting_point)
+
 
     print("Map Scenario:\n", mission.map_matrix)
     print("Linear Reachability matrix : \n", PT1.reachabilty)
@@ -727,7 +730,8 @@ def main(source, file_path = None, request_data = None):
     mission.map_generator.draw_grid_with_path_and_arrows_and_squares(mission.map_matrix.shape, circular_wavefront_sequence, 'circular_wavefront_path')
 
     """ Calculating costs"""
-    path_ids = mission.id_sequence(stateOfArt_sequence)
+    path_ids = mission.id_sequence(weighted_sequence
+                                   )
     linear_wavefront_cost = PT1.calculate_cost(linear_wavefront_sequence)
     circular_wavefront_cost = PT1.calculate_cost(circular_wavefront_sequence)
     weighted_wavefront_cost = PT1.calculate_cost(circular_wavefront_sequence)
