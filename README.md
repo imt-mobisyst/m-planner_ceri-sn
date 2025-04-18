@@ -2,10 +2,10 @@
 ## Folders Organization
 This project is organized into different folder as follows :<br>
 ├── audios<br>
-....
+....<br>
 ├── index.html **-->  Used to see interface** <br>
 ├── js<br>
-...
+...<br>
 ├── python<br>
 │   ├── coverage_path_planning<br>
 │   │   ├── coverage_planner.py<br>
@@ -20,8 +20,8 @@ This project is organized into different folder as follows :<br>
 │   ├── install.txt<br>
 │   ├── planner_venv<br>
 │   └── requirements.txt<br>
-├── ...
-└── 
+├── ...<br>
+└── <br>
 
 
 ## Explanation :
