@@ -4,38 +4,24 @@ This project is organized into different folder as follows :<br>
 ├── audios<br>
 ├── class_loadmap.html<br>
 ├── cpp<br>
-│ └── BoustrophedonCellularDecompositionPathPlanning<br>
 ├── docs<br>
-│ ├── 1-s2.0-S147466701644557X-main.pdf<br>
-│ ├── 2008.13041.pdf<br>
-│ ├── 4032.pdf<br>
-│ ├── e_star_Preprint.pdf<br>
-│ └── vehicles-03-00027-v2.pdf<br>
 ├── images<br>
 ├── index.html<br>
 ├── js<br>
-│ ├── Grid.js<br>
-│ ├── Mapper.js<br>
-│ ├── Mission.js<br>
-│ ├── missionPlan.js<br>
-│ ├── myJavascript.js<br>
-│ ├── Path.js<br>
-│ ├── resources<br>
-│ ├── scripts.js<br>
-│ ├── utils.js<br>
-│ ├── ZoneController.js<br>
-│ └── Zone.js<br>
 ├── LICENSE<br>
+├── node_modules<br>
+├── package.json<br>
+├── package-lock.json<br>
+├── projectServer.js<br>
 ├── python<br>
-│ ├── coverage_path_planning<br>
-│ ├── flask_server.py<br>
-│ ├── install.txt<br>
-│ ├── planner_venv<br>
-│ └── requirements.txt<br>
+│   ├── coverage_path_planning<br>
+│   ├── flask_server.py<br>
+│   ├── install.txt<br>
+│   ├── planner_venv<br>
+│   └── requirements.txt<br>
 ├── README.md<br>
 └── style<br>
-  ├── resources<br>
-  └── style.css<br>
+
 
 ## Explanation :
 
@@ -76,4 +62,15 @@ You should see the environment activated<br>
 pip install  requirements.txt<br>
 Or run each of needed packages installation inside folder file python/install.txt, it will automatically install dependencies<br>
 4. **Run :** <br>
-python3 flask_server.py
+Go to root directory of this project then run : <br>
+<pre> ```bash python3 -m http.server 8000 ``` </pre> 
+Open your browser and go to:<br>
+<pre> ```http://localhost:8000/index.html ``` </pre> 
+Navigate to the python folder:<br>
+<pre> ```cd python``` </pre> 
+(Optional / if not done yet) Activate your virtual environment if needed:<br>
+<pre> ```source <env_name>/bin/activate``` </pre> 
+Start the Flask server:<br>
+<pre> ```python3 flask_server.py``` </pre> 
+Use web interface to plan a mision and generate a path.
+**NB :** If needed data is saved into  python/coverage_path_planning/json folder : files are references by datetime of palanning
