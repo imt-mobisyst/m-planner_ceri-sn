@@ -15,6 +15,14 @@ This project is organized into different folder as follows :<br>
 ├── projectServer.js<br>
 ├── python<br>
 │   ├── coverage_path_planning<br>
+│   │   ├── coverage_planner.py<br>
+│   │   ├── coverage_test.py<br>
+│   │   ├── json<br>
+│   │   │   ├── json_to_numpy.py<br>
+│   │   │   ├── missionPoints.json<br>
+│   │   │   ├── __pycache__<br>
+│   │   │   └── updated_missionPoints.json<br>
+
 │   ├── flask_server.py<br>
 │   ├── install.txt<br>
 │   ├── planner_venv<br>
@@ -73,4 +81,4 @@ Navigate to the python folder:<br>
 Start the Flask server:<br>
 <pre>python3 flask_server.py</pre> 
 Use web interface to plan a mision and generate a path.<br>
-**NB :** If needed data is saved into  python/coverage_path_planning/json folder : files are references by datetime of palanning
+**NB :** If needed, data is saved into  **python/coverage_path_planning/json** folder : files are references by datetime of palanning
