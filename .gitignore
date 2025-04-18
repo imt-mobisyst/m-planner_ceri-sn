@@ -2,12 +2,12 @@ docs/
 .idea/
 
 
-coverage_path_planning/map/*.png
+coverage_path_planning/map/
 
-coverage_path_planning/maps/*.npy
+coverage_path_planning/maps/
 
-coverage_path_planning/output_images/*.png
-coverage_path_planning/output_images/*.jpg
-
+coverage_path_planning/output_images/
+python/coverage_path_planning/json/*
+python/coverage_path_planning/__pycache__/
 
 python/planner_venv
