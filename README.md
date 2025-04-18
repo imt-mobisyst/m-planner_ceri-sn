@@ -69,7 +69,7 @@ Open your browser and go to:<br>
 Navigate to the python folder:<br>
 <pre> cd python</pre> 
 (Optional / if not done yet) Activate your virtual environment if needed:<br>
-<pre>source <env_name>/bin/activate</pre> 
+<pre>source &lt;env_name&gt;/bin/activate</pre> 
 Start the Flask server:<br>
 <pre>python3 flask_server.py</pre> 
 Use web interface to plan a mision and generate a path.<br>
