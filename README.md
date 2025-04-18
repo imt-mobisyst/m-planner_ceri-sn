@@ -6,7 +6,7 @@ This project is organized into different folder as follows :<br>
 ├── cpp<br>
 ├── docs<br>
 ├── images<br>
-├── index.html<br>
+├── index.html<br> -->  Used to see interface
 ├── js<br>
 ├── LICENSE<br>
 ├── node_modules<br>
@@ -17,13 +17,13 @@ This project is organized into different folder as follows :<br>
 │   ├── coverage_path_planning<br>
 │   │   ├── coverage_planner.py<br>
 │   │   ├── coverage_test.py<br>
-│   │   ├── json<br>
+│   │   ├── json<br> -->  Used to save json files
 │   │   │   ├── json_to_numpy.py<br>
 │   │   │   ├── missionPoints.json<br>
 │   │   │   ├── __pycache__<br>
 │   │   │   └── updated_missionPoints.json<br>
 
-│   ├── flask_server.py<br>
+│   ├── flask_server.py<br> -->  Used to run planner backend
 │   ├── install.txt<br>
 │   ├── planner_venv<br>
 │   └── requirements.txt<br>
