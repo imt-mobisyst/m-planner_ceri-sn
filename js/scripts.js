@@ -10,8 +10,8 @@ let pathArrowsLayerId = NaN
 let missionLandmarksLayerId = NaN
 export let mission = new Mission()
 
-export let mapInstance = new Mapper('map', {
-    center: [50.36667, 3.06667],
+export let mapInstance = new Mapper('map', {     
+    center: [-33.7220295, 150.6733845],    
     zoom: 15})
 
 mapInstance.initializeMap()

@@ -11,7 +11,7 @@ export class Mapper {
         this.map = null;
         this.zones = []
         this.defaultOptions = {
-            center: [51.505, -0.09], // Default center (latitude, longitude)
+            center: [-33.7220295, 150.0033845], // Default center (latitude, longitude) e.g. CERI SN lat = 51.505; lng = -0.09
             start_zoom: 15, // Default zoom level
             tileLayerUrl: 'http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', // Default tile layer
             tileLayerOptions: {

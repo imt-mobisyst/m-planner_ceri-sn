@@ -28,9 +28,11 @@ let config = {
 //--------magnification with which the map will start--------
 const zoom = 15;
 //--------CERI-SN IMT co-ordinates--------
-const lat = 50.36667;
-const lng = 3.06667;
-
+//const lat = 50.36667;
+//const lng = 3.06667;
+//--------Regatta  co-ordinates--------
+const lat = -33.7220295;
+const lng = 150.6733845;
 //--------calling map--------
 const map = L.map('map', config).setView([lat, lng], zoom);
 map.options.zoomDelta = 0.52;
