@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./python/coverage_path_planning"
+    ]
+}
