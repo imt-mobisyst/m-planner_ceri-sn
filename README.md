@@ -33,11 +33,7 @@ This project is organized into different folder as follows :<br>
 
 ## Explanation :  
 
-<<<<<<< Updated upstream
 Our approach is compared with a state of art solution that could be found here : <br>
-=======
-Our approach is comapred to a state of art solution that could be foud here : <br>
->>>>>>> Stashed changes
 https://github.com/rodriguesrenato/coverage-path-planning <br>
 This solution try to identify the "best" heuristic to plan the coverage path. These heuristics difference mainly in 
 the manner of neighborhood definition. It takes also into account the movement to operate by the robot. Based on these parameters, the approach defines a policy matrix, which in turn defines the sequence of movements given a position.<br>
@@ -114,7 +110,6 @@ Open your browser and go to:<br>
 <pre> http://localhost:8000/index.html</pre> 
 Use web interface to plan a mision and generate a path.<br>
 
-<<<<<<< Updated upstream
 5. **Launch QGroundControl :**
 In a separate terminal, start the ArduPilot SITL simulation: <br>
 ```bash
@@ -197,6 +192,3 @@ This module handles low-level communication with **QGroundControl** using the **
 
 
 
-=======
-**NB :** If needed, data is saved into  **python/coverage_path_planning/json** folder : files are references by datetime of palanning
->>>>>>> Stashed changes

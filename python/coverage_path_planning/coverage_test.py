@@ -7,10 +7,12 @@ import matplotlib as mpl
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
 
-import time
+import time, os
 
 cp_debug_level = 0
 test_show_each_result = False
+CURRENT_FOLDER = os.path.dirname(os.path.abspath(__file__))
+
 
 def get_sequence(comapre_tb):
     sequence = []
@@ -22,7 +24,7 @@ def get_sequence(comapre_tb):
 
 # Load map
 def load_map(map_name):
-    with open("/home/bot/M-PLQNNER-LAST/m-planner_ceri-sn/python/coverage_path_planning/maps/{}.npy".format(map_name), 'rb') as f:
+    with open(CURRENT_FOLDER+"/maps/{}.npy".format(map_name), 'rb') as f:
         return np.load(f)
 
 def plot_map(target_map, trajectory, map_name="map", params_str=""):
@@ -97,7 +99,7 @@ def plot_map(target_map, trajectory, map_name="map", params_str=""):
     plt.title("Coverage Path Planning - {}\n{}".format(map_name, params_str))
     plt.tight_layout()
     #plt.show()
-    fig.savefig("/home/bot/M-PLQNNER-LAST/m-planner_ceri-sn/python/coverage_path_planning/output_images/SOA.png", bbox_inches='tight')
+    fig.savefig(CURRENT_FOLDER+"/output_images/SOA.png", bbox_inches='tight')
 def main():
     maps = ["map1", "map2", "map3", "map4"]
     cp_heuristics = [HeuristicType.VERTICAL,

@@ -20,7 +20,7 @@ import coverage_test
 import weighted_strategy
 from matplotlib.patches import FancyArrowPatch, Rectangle
 
-
+CURRENT_FOLDER = os.path.dirname(os.path.abspath(__file__))
 
 
 
@@ -100,7 +100,8 @@ class Maps_genetor():
         print('result_matrix',result_matrix)
         result_matrix[mask] = 0
         print(result_matrix)
-        with open("/home/bot/M-PLQNNER-LAST/m-planner_ceri-sn/python/coverage_path_planning/map/"+name+".png", 'wb') as f:
+        print(CURRENT_FOLDER)
+        with open(CURRENT_FOLDER+"/map/"+name+".png", 'wb') as f:
             plt.imsave(f, np.array(result_matrix), cmap=cm.gray)
 
 
@@ -108,14 +109,14 @@ class Maps_genetor():
 
     def save_as_npy(self, name='map0'):
         m = np.array(self.map)
-        with open("/home/bot/M-PLQNNER-LAST/m-planner_ceri-sn/python/coverage_path_planning/maps/"+name+".npy", 'wb') as f:
+        with open(CURRENT_FOLDER+"/maps/"+name+".npy", 'wb') as f:
             np.save(f, m)
 
     def load_npy_map(self, dir_path,  map_name):
         with open(dir_path+"{}.npy".format(map_name), 'rb') as f:
             return np.load(f)
         
-    def load_plt_map(self, dir_path = '/home/bot/M-PLQNNER-LAST/m-planner_ceri-sn/python/coverage_path_planning/map/', name= 'test_2'):
+    def load_plt_map(self, dir_path = CURRENT_FOLDER+'/map/', name= 'test_2'):
 
         img = plt.imread(os.path.join(dir_path, 'map', name+'.png'))
         return img
@@ -276,7 +277,7 @@ class Maps_genetor():
         plt.gca().invert_yaxis()
 
         #plt.show()
-        plt.savefig('/home/bot/M-PLQNNER-LAST/m-planner_ceri-sn/python/coverage_path_planning/output_images/'+image_name+'.jpg')
+        plt.savefig(CURRENT_FOLDER+'/output_images/'+image_name+'.jpg')
 
 
 
@@ -687,7 +688,7 @@ def main(source, file_path = None, request_data = None):
     mission.map_generator.save_as_image('binary_map')
     mission.map_generator.save_as_npy('map0')
     """ Read binary image """
-    image = cv2.imread('/home/bot/M-PLQNNER-LAST/m-planner_ceri-sn/python/coverage_path_planning/map/binary_map.png', cv2.IMREAD_GRAYSCALE)
+    image = cv2.imread(CURRENT_FOLDER+'/map/binary_map.png', cv2.IMREAD_GRAYSCALE)
     _, binary_image = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)
 
 
